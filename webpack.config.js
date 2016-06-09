@@ -11,9 +11,9 @@ module.exports = {
     path.join(__dirname, 'app/main.js')
   ],
   output: {
-    path: path.join(__dirname, '/dist/'),
+    path: path.join(__dirname, '/dist-react/'),
     filename: '[name].js',
-    publicPath: '/'
+    publicPath: '/ra/public'
   },
   plugins: [
     new HtmlWebpackPlugin({

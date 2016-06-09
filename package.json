@@ -1,11 +1,11 @@
 {
-  "name": "webpack-express-boilerplate",
+  "name": "cms-in-react",
   "version": "0.1.0",
   "description": "A boilerplate for running a Webpack workflow in Node express",
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/christianalfoni/webpack-express-boilerplate.git"
+    "url": "git+https://github.com/christianalfoni/webpack-express-boilerplate.git"
   },
   "keywords": [
     "express",
@@ -28,7 +28,8 @@
   "dependencies": {
     "babel-cli": "^6.4.0",
     "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "react-dom": "^0.14.3",
+    "request": "^2.72.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.0.3",
