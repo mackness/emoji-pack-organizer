@@ -3,6 +3,8 @@ import styles from './App.css';
 import Firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
 import $ from 'jquery';
+import _ from 'lodash';
+import Loader from './components/Loader/Loader';
 
 var App = React.createClass({
 
@@ -10,7 +12,10 @@ var App = React.createClass({
 
   getInitialState() {
     return {
-      test: 'foo'
+      test: 'foo',
+      // data: {
+      //   categories: ''
+      // }
     }
   },
 
@@ -35,11 +40,6 @@ var App = React.createClass({
       this.setState({
         data: snapshot.val()
       });
-
-      // var cats = this.state.data.categories.map((item, idx)=> {
-      //   return item.title
-      // });
-      console.log(this.state.data.categories);
     }, (err)=> {
       console.log("that's an error: ", err.code);
     });
@@ -59,7 +59,15 @@ var App = React.createClass({
     return (
       <div className={styles.app}>
         <h1 className={styles.title}>this is a red title</h1>
-
+        {(() => {
+          if  (this.state.data && this.state.data.categories) {
+            return this.makeArray(this.state.data.categories).map((item,idx) => {
+              return <p key={idx}> {item.title} </p>
+            });
+          } else {
+            return <Loader />
+          }
+        })()}
       </div>
     );
   }
