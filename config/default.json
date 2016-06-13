@@ -1,0 +1,8 @@
+{
+	//firebase config
+	"firebase": {
+		"apiKey": "",
+		"authDomain": "",
+		"databaseURL": "https://emoji-dev.firebaseio.com/"
+	}
+}
