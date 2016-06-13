@@ -40,6 +40,9 @@ if (isDeveloping) {
     res.sendFile(path.join(__dirname, 'dist-react/index.html'));
   });
 }
+//serializer route
+const serializer = require('./router/serializer');
+app.use('/serializer', serializer);
 
 //route other request to ember app
 app.use('*', function(req, res) {
