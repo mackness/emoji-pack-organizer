@@ -19,7 +19,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'app/index.tpl.html',
       inject: 'body',
-      filename: 'index.html'
+      filename: 'index.html',
+      files: {
+        css: [ "global.css" ],
+      }
     }),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),

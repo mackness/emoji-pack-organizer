@@ -12,13 +12,22 @@
 	overflow: hidden;
 }
 
+.nav a {
+	padding: 4px;
+	color: #fff;
+	text-decoration: none;
+}
+
+.nav a:active {color: #189cb8}
+.nav a:focus {color: #189cb8}
+
 .navList {
-	float: right;
+	float: left;
 }
 
 .navList li {
 	float: left;
-	margin-left: 15px;
+	margin-right: 15px;
 }
 
 .title {
@@ -28,3 +37,9 @@
 	text-transform: capitalize;
 	font-size: 20px; 
 }
+
+.activeLink {
+	background-color: #fff;
+	color: #0b5e90;
+}
+

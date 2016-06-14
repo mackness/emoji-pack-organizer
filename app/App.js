@@ -1,6 +1,6 @@
 
 import React from 'react'
-import styles from './style.css'
+import styles from './css/style.css'
 import Firebase from 'firebase'
 import ReactFireMixin from 'reactfire'
 
@@ -15,6 +15,11 @@ export default React.createClass({
     return {
       data: {}
     }
+  },
+
+  logout() {
+    var ref = new Firebase('https://emoji-dev.firebaseio.com/');
+    ref.unauth();
   },
 
   redirectToLogin() {
@@ -39,11 +44,17 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <ul role="nav">
-          <li><NavLink to="/" onlyActiveOnIndex={true}>Emojis</NavLink></li>
-          <li><NavLink to="/stickers">Stickers</NavLink></li>
-          <li><NavLink to="/gifs">Gifs</NavLink></li>
-        </ul>
+        <header className={styles.header}>
+          <h3 className={styles.title}>pack editor</h3>
+          <button onClick={this.logout} className="wr-button raised logout">Logout</button>
+        </header>
+        <nav className={styles.nav}>
+          <ul role="nav" className={styles.navList}>
+            <li><NavLink to="/ra" onlyActiveOnIndex={true}>Emojis</NavLink></li>
+            <li><NavLink to="/stickers">Stickers</NavLink></li>
+            <li><NavLink to="/gifs">Gifs</NavLink></li>
+          </ul>
+        </nav>
         
         {this.props.children}
       </div>
