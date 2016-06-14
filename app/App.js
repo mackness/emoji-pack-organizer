@@ -1,17 +1,13 @@
 
-import React from 'react';
-import styles from './style.css';
-import Firebase from 'firebase';
-import ReactFireMixin from 'reactfire';
+import React from 'react'
+import styles from './style.css'
+import Firebase from 'firebase'
+import ReactFireMixin from 'reactfire'
 
 //components
-import Loader from './components/Loader/Loader';
-import Category from './components/Category/Category';
-import makeArray from './methods/makeArray';
+import NavLink from './components/NavLink'
 
-
-
-var App = React.createClass({
+export default React.createClass({
 
   mixins: [ReactFireMixin],
 
@@ -31,20 +27,9 @@ var App = React.createClass({
     }
   },
 
-  monitorRootData(rootRef) {
-    rootRef.on('value', (snapshot)=> {
-      this.setState({
-        data: snapshot.val()
-      });
-    }, (err)=> {
-      console.error("that's an error: ", err.code);
-    });
-  },
-
   componentWillMount() {
     var rootRef = new Firebase('https://emoji-dev.firebaseio.com/');
     if (rootRef.getAuth()) {
-      this.monitorRootData(rootRef);
       rootRef.onAuth(this.monitorUserState);
     } else {
       this.redirectToLogin();
@@ -53,31 +38,19 @@ var App = React.createClass({
 
   render() {
     return (
-      <div className={styles.app}>
-        <h1 className={styles.title}>this is a red title</h1>
-        {(() => {
-          if  (this.state.data && this.state.data.categories) {
-            return makeArray(this.state.data.categories).map((item,idx) => {
-              return (
-                <Category 
-                  key={idx} 
-                  title={item.title} 
-                  categoryEmojis={item.emojis} 
-                  allEmojis={this.state.data.emojis}
-                />
-              ); 
-            });
-          } else {
-            return <Loader />
-          }
-        })()}
+      <div>
+        <ul role="nav">
+          <li><NavLink to="/" onlyActiveOnIndex={true}>Emojis</NavLink></li>
+          <li><NavLink to="/stickers">Stickers</NavLink></li>
+          <li><NavLink to="/gifs">Gifs</NavLink></li>
+        </ul>
+        
+        {this.props.children}
       </div>
     );
   }
 
 });
-
-export default App
 
 
 

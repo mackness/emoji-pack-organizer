@@ -1,16 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import Types from './components/Types/Types';
-import NoMatch from './components/NoMatch/NoMatch';
-import { Router, Route, Link, browserHistory } from 'react-router';
+
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Router, Route, browserHistory, IndexRoute } from 'react-router'
+
+import App from './App'
+import Emojis from './components/Emojis'
+import Stickers from './components/Stickers'
+import Gifs from './components/Gifs'
 
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/ra" component={App}>
-    	<Route path="ra/type/" component={Types}>
-    		<Route path="*" component={NoMatch}/>
-    	</Route>
+    	<IndexRoute component={Emojis}/>
+    	<Route path="/stickers" component={Stickers} />
+    	<Route path="/gifs" component={Gifs} />
     </Route>
   </Router>
-), document.getElementById('root'));
+), document.getElementById('root'))
