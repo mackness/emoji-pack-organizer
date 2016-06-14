@@ -1,10 +1,15 @@
+
 import React from 'react';
-import styles from './App.css';
+import styles from './style.css';
 import Firebase from 'firebase';
 import ReactFireMixin from 'reactfire';
-import $ from 'jquery';
-import _ from 'lodash';
+
+//components
 import Loader from './components/Loader/Loader';
+import Category from './components/Category/Category';
+import makeArray from './methods/makeArray';
+
+
 
 var App = React.createClass({
 
@@ -12,17 +17,8 @@ var App = React.createClass({
 
   getInitialState() {
     return {
-      test: 'foo',
-      // data: {
-      //   categories: ''
-      // }
+      data: {}
     }
-  },
-
-  makeArray(obj) {
-    return $.map(obj, (item, index)=> {
-      return item
-    });
   },
 
   redirectToLogin() {
@@ -33,7 +29,7 @@ var App = React.createClass({
     if (!data) {
       this.redirectToLogin();
     }
-  }, // asynchronously monitor user state
+  },
 
   monitorRootData(rootRef) {
     rootRef.on('value', (snapshot)=> {
@@ -41,7 +37,7 @@ var App = React.createClass({
         data: snapshot.val()
       });
     }, (err)=> {
-      console.log("that's an error: ", err.code);
+      console.error("that's an error: ", err.code);
     });
   },
 
@@ -61,8 +57,15 @@ var App = React.createClass({
         <h1 className={styles.title}>this is a red title</h1>
         {(() => {
           if  (this.state.data && this.state.data.categories) {
-            return this.makeArray(this.state.data.categories).map((item,idx) => {
-              return <p key={idx}> {item.title} </p>
+            return makeArray(this.state.data.categories).map((item,idx) => {
+              return (
+                <Category 
+                  key={idx} 
+                  title={item.title} 
+                  categoryEmojis={item.emojis} 
+                  allEmojis={this.state.data.emojis}
+                />
+              ); 
             });
           } else {
             return <Loader />
@@ -71,6 +74,20 @@ var App = React.createClass({
       </div>
     );
   }
+
 });
 
 export default App
+
+
+
+
+
+
+
+
+
+
+
+
+
