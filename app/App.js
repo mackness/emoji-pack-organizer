@@ -45,17 +45,17 @@ export default React.createClass({
     return (
       <div>
         <header className={styles.header}>
-          <h3 className={styles.title}>pack editor</h3>
-          <button onClick={this.logout} className="wr-button raised logout">Logout</button>
+          <h3 className={styles.title}>pack editor ({this.props.params.keyboard_ID})</h3>
+          <button onClick={this.logout} className={styles.logout}>Logout</button>
         </header>
         <nav className={styles.nav}>
           <ul role="nav" className={styles.navList}>
-            <li><NavLink to="/ra" onlyActiveOnIndex={true}>Emojis</NavLink></li>
-            <li><NavLink to="/stickers">Stickers</NavLink></li>
-            <li><NavLink to="/gifs">Gifs</NavLink></li>
+            <li><NavLink to={`/ra/${this.props.params.keyboard_ID}`} onlyActiveOnIndex={true}>Emojis</NavLink></li>
+            <li><NavLink to={`/ra/${this.props.params.keyboard_ID}/stickers`}>Stickers</NavLink></li>
+            <li><NavLink to={`/ra/${this.props.params.keyboard_ID}/gifs`}>Gifs</NavLink></li>
           </ul>
         </nav>
-        
+        {this.props.params.keyboard_ID}
         {this.props.children}
       </div>
     );

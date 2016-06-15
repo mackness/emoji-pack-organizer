@@ -5,11 +5,6 @@ import styles from '../css/style.css'
 
 export default React.createClass({
   render() {
-    return <Link {...this.props} activeStyle={{
-    	background: 'white', 
-    	color: '#189cb8',
-    	padding: '4px',
-    	borderRadius: '4px'
-    }} />
+    return <Link {...this.props} className="btn" activeClassName="active" />
   }
 })

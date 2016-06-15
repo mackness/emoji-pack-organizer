@@ -1,3 +1,28 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+
+body {
+	margin: 0;
+	padding: 0;
+  	font-family: 'Source Sans Pro', sans-serif;
+  	font-weight: 300;
+  	background-color: #f3f3f3;
+}
+
+.btn {
+    color: #189cb8;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 2px;
+    text-decoration: none;
+    background-color: #fff;
+	transition: 100ms background-color ease-in-out;
+}
+
+.btn:hover {
+	background-color: #f3f3f3;
+}
 
 .header {
 	background-color: #0b5e90;
@@ -12,17 +37,35 @@
 	overflow: hidden;
 }
 
-.nav a {
-	padding: 4px;
-	color: #fff;
-	text-decoration: none;
+.logout {
+
 }
+
+.logout,
+.nav a {
+    color: #189cb8;
+    display: inline-block;
+    padding: 5px 12px 5px 12px;
+    border-radius: 2px;
+    text-decoration: none;
+    background-color: #fff;
+	transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.2s;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+	transition: 100ms background-color ease-in-out;
+}
+
+.nav a:hover { ackground-color: #fff}
+.navList:hover .nav a {background-color: #f5f5f5}
 
 .nav a:active {color: #189cb8}
 .nav a:focus {color: #189cb8}
 
 .navList {
 	float: left;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 .navList li {
@@ -33,13 +76,22 @@
 .title {
 	float: left;
 	color: #fff;
-	margin: 7px 0 0 4px;
+	margin: 3px 0 4px 4px;
 	text-transform: capitalize;
 	font-size: 20px; 
+	letter-spacing: 0.04rem;
 }
 
-.activeLink {
-	background-color: #fff;
-	color: #0b5e90;
+.logout {
+	float: right;
+	outline: 0;
+	border: 0;
+	float: right;
+    outline: 0;
+    border: 0;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: capitalize;
 }
+
 
