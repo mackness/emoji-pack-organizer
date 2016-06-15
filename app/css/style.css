@@ -1,6 +1,9 @@
+
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
+html {box-sizing: border-box;}
+*, *:before, *:after {box-sizing: inherit;}
 
 body {
 	margin: 0;
@@ -33,29 +36,36 @@ body {
 .nav {
 	padding: 15px;
 	background-color: #189cb8;
-	width: 100%;
 	overflow: hidden;
-}
-
-.logout {
-
 }
 
 .logout,
 .nav a {
-    color: #189cb8;
+    color: #fff;
     display: inline-block;
     padding: 5px 12px 5px 12px;
     border-radius: 2px;
     text-decoration: none;
-    background-color: #fff;
+    background-color: transparent;
 	transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     transition-delay: 0.2s;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-	transition: 100ms background-color ease-in-out;
+	transition: 250ms all ease-in-out;
+	border: solid 1px #fff;
 }
 
-.nav a:hover { ackground-color: #fff}
+
+a.active {
+	color: #189cb8;
+	background-color: #fff;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+.nav a:hover {
+	color: #189cb8;
+	background-color: #fff;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
 .navList:hover .nav a {background-color: #f5f5f5}
 
 .nav a:active {color: #189cb8}
@@ -89,9 +99,26 @@ body {
 	float: right;
     outline: 0;
     border: 0;
-    font-size: 14px;
+    color: #0b5e90;
+    font-size: 15px;
     cursor: pointer;
+    padding: 5px 12px 5px 12px;
+    background-color: #fff;
     text-transform: capitalize;
 }
+
+.leftCol {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	top: 114px;
+	width: 100%;
+	max-width: 400px;
+	padding: 25px 20px;
+	background-color: #fff;
+}
+
+
+
 
 

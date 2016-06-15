@@ -7,6 +7,10 @@ import ReactFireMixin from 'reactfire'
 //components
 import NavLink from './components/NavLink'
 
+//methods
+import getObjectKeys from './methods/getObjectKeys';
+
+
 export default React.createClass({
 
   mixins: [ReactFireMixin],
@@ -32,10 +36,19 @@ export default React.createClass({
     }
   },
 
+  getPackData(ref) {
+    ref.child('packs/').on('value', (snapshot)=> {
+      console.log(snapshot.val());
+    }, (err)=> {
+      console.warn('error: ', err);
+    })
+  },
+
   componentWillMount() {
     var rootRef = new Firebase('https://emoji-dev.firebaseio.com/');
     if (rootRef.getAuth()) {
       rootRef.onAuth(this.monitorUserState);
+      this.getPackData(rootRef);
     } else {
       this.redirectToLogin();
     }
@@ -55,8 +68,12 @@ export default React.createClass({
             <li><NavLink to={`/ra/${this.props.params.keyboard_ID}/gifs`}>Gifs</NavLink></li>
           </ul>
         </nav>
-        {this.props.params.keyboard_ID}
-        {this.props.children}
+        <div className={styles.leftCol}>
+          {this.props.params.keyboard_ID}
+          {this.props.children}
+
+
+        </div>
       </div>
     );
   }
