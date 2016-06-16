@@ -11,6 +11,7 @@ body {
   	font-family: 'Source Sans Pro', sans-serif;
   	font-weight: 300;
   	background-color: #f3f3f3;
+  	padding-top: 114px;
 }
 
 .btn {
@@ -25,6 +26,13 @@ body {
 
 .btn:hover {
 	background-color: #f3f3f3;
+}
+
+.headerBlock {
+	top: 0;
+	left: 0;
+	right: 0;
+	position: fixed;
 }
 
 .header {
@@ -49,7 +57,7 @@ body {
     background-color: transparent;
 	transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     transition-delay: 0.2s;
-	transition: 250ms all ease-in-out;
+	transition: 100ms all ease-in-out;
 	border: solid 1px #fff;
 }
 
@@ -117,6 +125,25 @@ a.active {
 	padding: 25px 20px;
 	background-color: #fff;
 }
+
+.rightCol {
+	width: calc(100% - 400px);
+	float: right;
+	padding: 25px 20px;
+	display: flex;
+	flex-direction: row;
+}
+
+.cell {
+	width: 20%;
+}
+
+
+
+
+
+
+
 
 
 
