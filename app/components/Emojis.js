@@ -44,11 +44,22 @@ export default React.createClass({
     })
   },
 
+  getPhotos(ref) {
+    ref.child('photos').on('value', (snapshot)=> {
+      this.setState({
+        photos: snapshot.val()
+      })
+    }, (err)=> {
+      console.warn('error: ', err);
+    })
+  },
+
   componentWillMount() {
-    var rootRef = new Firebase('https://emoji-dev.firebaseio.com/');
+    var rootRef = new Firebase('https://emoji-dev.firebaseio.com/')
     if (rootRef.getAuth()) {
       this.getEmojis(rootRef)
       this.getCategories(rootRef)
+      this.getPhotos(rootRef)
     } else {
       this.redirectToLogin();
     }
@@ -60,37 +71,35 @@ export default React.createClass({
 	      {(() => {
 	        if  (this.state.data && this.state.emojis) {
 	        	if (this.state.data && this.state.categories) {
-	        		return getObjectKeys(this.state.categories).map((category, idx)=> {
-	        			if (category.obj.keyboard == this.props.params.keyboard_ID) {
-										
-										return (
-											<div key={idx}>
-											<h3>{category.obj.title}</h3>
-
-											{(() => {
-												if (category.obj.emojis) {
-													return getObjectKeys(category.obj.emojis).map((categoryEmojis, idx)=> {
-														return getObjectKeys(this.state.emojis).map((emoji, idx) => {
-
-															if (categoryEmojis.key == emoji.key) {
-																return (
-																	<Emoji
-																		key={idx}
-																		emoji={emoji}
-																	/>	
-																)
-															}
-														
-														});
-													});
-												}
-											})()}
+	        		if (this.state.data && this.state.photos) {
+		        		return getObjectKeys(this.state.categories).map((category, idx)=> {
+		        			if (category.obj.keyboard == this.props.params.keyboard_ID) {
 											
-											</div>
-										)
-	        				
-	        				}
-	        		});
+											return (
+												<div key={idx} className={styles.category}>
+												<h3 className={styles.categoryTitle}>{category.obj.title}</h3>
+
+												{(() => {
+													if (category.obj.emojis) {
+														return getObjectKeys(category.obj.emojis).map((categoryEmoji, idx)=> {
+															let { key } = categoryEmoji
+															return (
+																<Emoji
+																	key={idx}
+																	photo={this.state.photos[Object.keys(this.state.emojis[key].photo)[0]]}
+																	emoji={this.state.emojis[key]} />
+															)
+															
+														});
+													}
+												})()}
+												
+												</div>
+											)
+		        				
+		        				}
+		        		});
+	        		}
 	        	}
 	        } else {
 	          return <Loader />

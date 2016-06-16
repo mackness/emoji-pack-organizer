@@ -21,7 +21,8 @@ export default React.createClass({
   render() {
     return (
 	    <div className={styles.cell}>
-        {this.props.emoji.obj.title}
+        <img src={this.props.photo.url} />
+        {this.props.emoji.title}
 	    </div>
     );
   }
