@@ -14,6 +14,8 @@ import getObjectKeys from './methods/getObjectKeys'
 import makeArray from './methods/makeArray'
 
 
+// TODO: get category id and add it to url params
+
 export default React.createClass({
 
   mixins: [
@@ -31,22 +33,22 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      text: ":)",
-    };
+      text: ":)"
+    }
   },
 
   logout() {
     var ref = new Firebase('https://emoji-dev.firebaseio.com/');
-    ref.unauth();
+    ref.unauth()
   },
 
   redirectToLogin() {
-    window.location.replace(window.location.origin);
+    window.location.replace(window.location.origin)
   },
 
   monitorUserState(data) {
     if (!data) {
-      this.redirectToLogin();
+      this.redirectToLogin()
     }
   },
 
@@ -56,29 +58,65 @@ export default React.createClass({
         packs: snapshot.val()
       })
     }, (err)=> {
-      console.warn('error: ', err);
+      console.warn('error: ', err)
     })
   },
 
   getKeyboardData(ref) {
     ref.child(`keyboards/${this.props.params.keyboard_ID}`).on('value', (snapshot)=> {
       this.setState({
-        keyboard: snapshot.val()
+        keyboard: snapshot.val(),
       })
     }, (err)=> {
-      console.warn('error: ', err);
+      console.warn('error: ', err)
+    })
+  },
+
+  setActiveType() {
+    getObjectKeys(this.state.keyboard.types).map((type, idx)=> {
+      var title = this.state.types[type.key].title
+      if (idx == 0) {
+        this.setState({
+          activeType: {
+            key: type.key,
+            title: title
+          }
+        })
+      }
+    })
+  },
+
+  getTypeData(ref) {
+    ref.child('types').on('value', (snapshot)=> {
+      this.setState({
+        types: snapshot.val()
+      })
+      this.setActiveType()
+    }, (err)=> {
+      console.warn('error: ', err)
     })
   },
 
   componentWillMount() {
     var rootRef = new Firebase('https://emoji-dev.firebaseio.com/');
     if (rootRef.getAuth()) {
-      rootRef.onAuth(this.monitorUserState);
-      this.getPackData(rootRef);
-      this.getKeyboardData(rootRef);
+      rootRef.onAuth(this.monitorUserState)
+      this.getPackData(rootRef)
+      this.getKeyboardData(rootRef)
+      this.getTypeData(rootRef)
     } else {
-      this.redirectToLogin();
+      this.redirectToLogin()
     }
+  },
+
+  updateActiveType(key, title, event) {
+    event.preventDefault()
+    this.setState({
+      activeType: {
+        key,
+        title
+      }
+    })
   },
   
   // {this.props.params.keyboard_ID}
@@ -96,9 +134,24 @@ export default React.createClass({
           </header>
           <nav className={styles.nav}>
             <ul role="nav" className={styles.navList}>
-              <li><NavLink to={`/ra/${this.props.params.keyboard_ID}/emojis`} onlyActiveOnIndex={true}>Emojis</NavLink></li>
-              <li><NavLink to={`/ra/${this.props.params.keyboard_ID}/stickers`}>Stickers</NavLink></li>
-              <li><NavLink to={`/ra/${this.props.params.keyboard_ID}/gifs`}>Gifs</NavLink></li>
+            {(() => {
+              if (this.state.data && this.state.keyboard) {
+                if (this.state.data && this.state.types) {
+                  if(this.state.data && this.state.activeType) {
+                    return getObjectKeys(this.state.keyboard.types).map((type, idx)=> {
+                      let {title} = this.state.types[type.key]
+                      let {key} = type
+                      let active = key == this.state.activeType.key ? true : false
+                      return (
+                        <li>
+                          <NavLink key={idx} active={active} handleClick={this.updateActiveType.bind(this, key, title)}> {title} </NavLink>
+                        </li>
+                      )
+                    })
+                  }
+                }
+              }
+            })()}
             </ul>
           </nav>
         </div>
@@ -109,7 +162,7 @@ export default React.createClass({
                 if (item.keyboard == this.props.params.keyboard_ID) {
                   return <p key={idx}>{item.title}</p>
                 }
-              });
+              })
             } else {
               return <Loader />
             }
@@ -119,19 +172,7 @@ export default React.createClass({
           {this.props.children}
         </div>
       </div>
-    );
+    )
   }
-});
-
-
-
-
-
-
-
-
-
-
-
-
+})
 

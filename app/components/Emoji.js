@@ -19,13 +19,13 @@ export default React.createClass({
   },
 
   render() {
+    let photo = this.props.photo.thumbnail ? `http://d3q6cnmfgq77qf.cloudfront.net/${this.props.photo.thumbnail}` : this.props.photo.url
     return (
 	    <div className={styles.cell}>
-        <img src={this.props.photo.url} />
-        {this.props.emoji.title}
+        <img className={styles.emojiPhoto} src={photo} />
+        {this.props.position}
 	    </div>
     );
   }
 
 });
-

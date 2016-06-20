@@ -5,6 +5,9 @@ import styles from '../css/style.css'
 
 export default React.createClass({
   render() {
-    return <Link {...this.props} className="btn" activeClassName={styles.active} />
+  	let active = this.props.active ? styles.active : ''
+    return (
+    	<a href="#" onClick={this.props.handleClick} className={active}>{this.props.children}</a>
+    );
   }
 })

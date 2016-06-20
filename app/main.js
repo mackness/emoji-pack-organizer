@@ -11,9 +11,9 @@ import Gifs from './components/Gifs'
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path="/ra/:keyboard_ID/emojis" component={App}>
-    	<IndexRoute component={Emojis} />
-    	<Route path="/ra/:keyboard_ID/stickers" component={Stickers} />
-    	<Route path="/ra/:keyboard_ID/gifs" component={Gifs} />
+    	<IndexRoute handler={App} component={Emojis} />
+    	<Route path="/ra/:keyboard_ID/stickers" handler={App} component={Stickers} />
+    	<Route path="/ra/:keyboard_ID/gifs" handler={App} component={Gifs} />
     </Route>
   </Router>
 ), document.getElementById('root'))

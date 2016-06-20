@@ -2,15 +2,19 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-html {box-sizing: border-box;}
-*, *:before, *:after {box-sizing: inherit;}
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 
 body {
 	margin: 0;
 	padding: 0;
   	font-family: 'Source Sans Pro', sans-serif;
   	font-weight: 300;
-  	background-color: #f3f3f3;
+  	background-color: #ccc;
   	padding-top: 114px;
 }
 
@@ -45,6 +49,7 @@ body {
 	padding: 15px;
 	background-color: #189cb8;
 	overflow: hidden;
+	height: 62px;
 }
 
 .logout,
@@ -139,20 +144,30 @@ a.active {
 }
 
 .cell {
-	width: 20%;
+	width: 10%;
+	float: left;
+	text-align: center;
+	margin-bottom: 15px; 
 }
 
 .category {
 	overflow: hidden;
 	width: 100%;
 	margin-top: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	padding: 15px;
 	background-color: #fff;
 }
 
 .categoryTitle {
 	margin: 0 0 15px 0;
+}
+
+.emojiPhoto {
+	max-width: 100%;
+	max-width: 100px;
+	cursor: move;
+	padding: 10px;
 }
 
 
