@@ -61,8 +61,6 @@ export default React.createClass({
   },
 
   componentWillMount() {
-  	// let x = this.props
-  	// debugger
     var rootRef = new Firebase('https://emoji-dev.firebaseio.com/')
     if (rootRef.getAuth()) {
       this.getEmojis(rootRef)
@@ -84,26 +82,30 @@ export default React.createClass({
 		        			if (category.obj.keyboard == this.props.params.keyboard_ID) {
 
 											return (
-												<div key={idx} className={styles.category}>
-												<h3 className={styles.categoryTitle}>{category.obj.title}</h3>
+												<div>
+													<h3 className={styles.categoryTitle}>{category.obj.title}</h3>
+													<div key={idx} className={styles.category}>
 
-													{(() => {
-														if (category.obj.emojis) {
-															return getObjectKeys(category.obj.emojis).map((categoryEmoji, idx)=> {
-																let { key } = categoryEmoji
-																for (var photoKey in this.state.emojis[key].photo) {
-																	var photo = this.state.photos[photoKey]
-																}
-																return (
-																	<Emoji
-																		key={idx}
-																		photo={photo}
-																		emoji={this.state.emojis[key]} />
-																)
-															});
-														}
-													})()}
-												
+														{(() => {
+															if (category.obj.emojis) {
+																return getObjectKeys(category.obj.emojis).map((categoryEmoji, idx)=> {
+																	let {key} = categoryEmoji 
+																	for (var photoKey in this.state.emojis[key].photo) {
+																		var photo = this.state.photos[photoKey]
+																	}
+																	if (this.props.activeType.key == this.state.emojis[key].type) {
+																		return (
+																			<Emoji
+																				key={idx}
+																				photo={photo}
+																				emoji={this.state.emojis[key]} />
+																		)
+																	}
+																});
+															}
+														})()}
+													
+													</div>
 												</div>
 											)
 		        				

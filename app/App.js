@@ -142,11 +142,18 @@ export default React.createClass({
                       let {title} = this.state.types[type.key]
                       let {key} = type
                       let active = key == this.state.activeType.key ? true : false
-                      return (
-                        <li>
-                          <NavLink key={idx} active={active} handleClick={this.updateActiveType.bind(this, key, title)}> {title} </NavLink>
-                        </li>
-                      )
+                      if (title != 'Recents') {
+                        if (title != 'Purchases') {
+                          return (
+                            <li>
+                              <NavLink 
+                                key={idx} 
+                                active={active} 
+                                handleClick={this.updateActiveType.bind(this, key, title)}> {title} </NavLink>
+                            </li>
+                          )
+                        }
+                      }
                     })
                   }
                 }
@@ -156,6 +163,7 @@ export default React.createClass({
           </nav>
         </div>
         <div className={styles.leftCol}>
+
           {(() => {
             if  (this.state.data && this.state.packs) {
               return makeArray(this.state.packs).map((item,idx) => {
@@ -167,9 +175,18 @@ export default React.createClass({
               return <Loader />
             }
           })()}
+        
         </div>
         <div className={styles.rightCol}>
-          {this.props.children}
+
+          {(() => {
+            return React.Children.map(this.props.children,
+             (child) => React.cloneElement(child, {
+               activeType: this.state.activeType
+             })
+            );
+          })()}
+
         </div>
       </div>
     )
