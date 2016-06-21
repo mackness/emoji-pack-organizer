@@ -56,10 +56,6 @@ export default React.createClass({
     })
   },
 
-  componentDidMount() {
-  	console.log('damn fuckn right this component mounted m8')
-  },
-
   componentWillMount() {
     var rootRef = new Firebase('https://emoji-dev.firebaseio.com/')
     if (rootRef.getAuth()) {
@@ -98,6 +94,8 @@ export default React.createClass({
 																			<Emoji
 																				key={idx}
 																				photo={photo}
+																				packs={this.props.packs}
+																				emoji_ID={key}
 																				emoji={this.state.emojis[key]} />
 																		)
 																	}

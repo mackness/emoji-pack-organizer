@@ -4,10 +4,12 @@ import styles from './css/style.css'
 import Firebase from 'firebase'
 import ReactFireMixin from 'reactfire'
 import ReactEmoji from 'react-emoji'
+import _cloneDeep from 'lodash.cloneDeep'
 
 //components
 import NavLink from './components/NavLink'
 import Loader from './components/Loader'
+import Pack from './components/Pack'
 
 //methods
 import getObjectKeys from './methods/getObjectKeys'
@@ -33,7 +35,15 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      text: ":)"
+      text: ":)",
+      packColors: [
+        '#f1c40f', 
+        '#27ae60',
+        '#9b59b6',
+        '#95a5a6',
+        '#95a5a6',
+        '#95a5a6'
+      ]
     }
   },
 
@@ -54,9 +64,19 @@ export default React.createClass({
 
   getPackData(ref) {
     ref.child('packs').on('value', (snapshot)=> {
+
+      let obj = snapshot.val()
+      let packObj = _cloneDeep(obj)
+      let c = 0
+      for (let pack in packObj) {
+        packObj[pack].color =  this.props.packColors[c]
+        c++
+      }
+
       this.setState({
-        packs: snapshot.val()
+        packs: packObj
       })
+
     }, (err)=> {
       console.warn('error: ', err)
     })
@@ -164,15 +184,26 @@ export default React.createClass({
         </div>
         <div className={styles.leftCol}>
 
+          <h3>Packs</h3>
+
           {(() => {
             if  (this.state.data && this.state.packs) {
               return makeArray(this.state.packs).map((item,idx) => {
                 if (item.keyboard == this.props.params.keyboard_ID) {
-                  return <p key={idx}>{item.title}</p>
+
+                  return (
+                    <Pack 
+                      key={idx}
+                      color={item.color}
+                      title={item.title} /> 
+                  )
+
                 }
               })
             } else {
-              return <Loader />
+              return (
+                <Loader />
+              )
             }
           })()}
         
@@ -182,7 +213,8 @@ export default React.createClass({
           {(() => {
             return React.Children.map(this.props.children,
              (child) => React.cloneElement(child, {
-               activeType: this.state.activeType
+               activeType: this.state.activeType,
+               packs: this.state.packs
              })
             );
           })()}
