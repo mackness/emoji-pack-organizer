@@ -5,6 +5,7 @@ import styles from '../css/style.css'
 
 //components
 import Loader from './Loader'
+import BrokenImage from './BrokenImage'
 
 //methods
 import getObjectKeys from '../methods/getObjectKeys'
@@ -28,7 +29,6 @@ export default React.createClass({
       let {emojis} = packs[pack]
       if (emojis) {
         if (emojis.hasOwnProperty(emoji_ID)) {
-          let x = packs[pack].color
           this.setState({
             packColor: packs[pack].color
           })
@@ -48,25 +48,30 @@ export default React.createClass({
   render() {
     let {imgStatus, packColor} = this.state
     let {thumbnail, url} = this.props.photo
-    let {position} = this.props.emoji
+    let {position, isIOS, isAndroid} = this.props.emoji
 
     let photo = thumbnail ? `http://d3q6cnmfgq77qf.cloudfront.net/${thumbnail}` : url
-    let loadingElement = imgStatus ? '' : <Loader />
+    let loadingElement = imgStatus ? null : <Loader />
     let cellClass = imgStatus ? styles.cell : styles.cellLoading
-    let color = packColor ? packColor : ''
-
-    return (
-      <div className={cellClass}>
-        {loadingElement}
-        <img
-          onLoad={this.handleImageLoaded}
-          onError={this.handleImageError}
-          className={styles.emojiPhoto}
-          data-position={position}
-          src={photo}
-          style={{borderColor: color}} />
-      </div>
-    );
+    let color = packColor ? packColor : null
+    
+    if (color) {
+      return (
+        <div className={cellClass}>
+          {loadingElement}
+          <img
+            onLoad={this.handleImageLoaded}
+            onError={this.handleImageError}
+            className={styles.emojiPhoto}
+            data-position={position}
+            data-id={this.props.emoji_ID}
+            src={photo}
+            style={{borderColor: color}} />
+        </div>
+      );
+    } else {
+      return false
+    }
   }
 
 });

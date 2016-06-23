@@ -12,6 +12,9 @@ import Emoji from './Emoji'
 //methods
 import getObjectKeys from '../methods/getObjectKeys'
 import makeArray from '../methods/makeArray'
+import _has from 'lodash.has'
+import _sortBy from 'lodash.sortBy'
+import _cloneDeep from 'lodash.cloneDeep'
 
 
 export default React.createClass({
@@ -21,7 +24,43 @@ export default React.createClass({
   getInitialState() {
     return {
       data: {},
+      sortedEmojis: {}
     }
+  },
+
+  handleSortingEmojis(props) {
+  	if (_has(this.state, 'categories')) {
+  		if (_has(this.state, 'emojis')) {
+  			
+  			let x = 0
+  			let y = 0
+  			let sorted = []
+  			let {categories, emojis} = this.state
+
+  			for (var cat in categories) {
+  				sorted.push({
+  					id: cat,
+  					title: categories[cat].title,
+  					emojis: []
+  				})
+	  			for (var emoji in categories[cat].emojis) {
+	  				sorted[x].emojis.push(emojis[emoji])
+	  				sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
+	  				y++
+	  			}
+	  			x++
+  			}
+
+  			this.setState({
+  				sortedEmojis: sorted
+  			})
+
+			}
+  	}
+  },
+
+  componentWillReceiveProps(props) {
+  	this.handleSortingEmojis(props)
   },
 
   getEmojis(ref) {
@@ -30,6 +69,7 @@ export default React.createClass({
       this.setState({
         emojis: snapshot.val()
       })
+      this.handleSortingEmojis()
     }, (err)=> {
       console.warn('error: ', err);
     })
@@ -41,6 +81,7 @@ export default React.createClass({
       this.setState({
         categories: snapshot.val()
       })
+      this.handleSortingEmojis()
     }, (err)=> {
       console.warn('error: ', err);
     })
@@ -71,21 +112,23 @@ export default React.createClass({
     return (
 	    <div>
 	      {(() => {
-	        if  (this.state.data && this.state.emojis) {
-	        	if (this.state.data && this.state.categories) {
-	        		if (this.state.data && this.state.photos) {
+	        if  (_has(this.state, 'emojis')) {
+	        	if (_has(this.state, 'categories')) {
+	        		if (_has(this.state, 'photos')) {
+	        			let x = getObjectKeys(this.state.categories)
+	        			debugger 
 		        		return getObjectKeys(this.state.categories).map((category, idx)=> {
 		        			if (category.obj.keyboard == this.props.params.keyboard_ID) {
 
 											return (
-												<div>
+												<div key={idx}>
 													<h3 className={styles.categoryTitle}>{category.obj.title}</h3>
-													<div key={idx} className={styles.category}>
+													<div className={styles.category}>
 
 														{(() => {
 															if (category.obj.emojis) {
 																return getObjectKeys(category.obj.emojis).map((categoryEmoji, idx)=> {
-																	let {key} = categoryEmoji 
+																	let {key} = categoryEmoji
 																	for (var photoKey in this.state.emojis[key].photo) {
 																		var photo = this.state.photos[photoKey]
 																	}

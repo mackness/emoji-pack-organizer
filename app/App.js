@@ -14,6 +14,7 @@ import Pack from './components/Pack'
 //methods
 import getObjectKeys from './methods/getObjectKeys'
 import makeArray from './methods/makeArray'
+import _has from 'lodash.has'
 
 
 // TODO: get category id and add it to url params
@@ -35,7 +36,7 @@ export default React.createClass({
 
   getDefaultProps() {
     return {
-      text: ":)",
+      text: ":(",
       packColors: [
         '#f1c40f', 
         '#27ae60',
@@ -155,9 +156,9 @@ export default React.createClass({
           <nav className={styles.nav}>
             <ul role="nav" className={styles.navList}>
             {(() => {
-              if (this.state.data && this.state.keyboard) {
-                if (this.state.data && this.state.types) {
-                  if(this.state.data && this.state.activeType) {
+              if (_has(this.state, 'keyboard')) {
+                if (_has(this.state, 'types')) {
+                  if(_has(this.state, 'activeType')) {
                     return getObjectKeys(this.state.keyboard.types).map((type, idx)=> {
                       let {title} = this.state.types[type.key]
                       let {key} = type
@@ -187,7 +188,7 @@ export default React.createClass({
           <h3>Packs</h3>
 
           {(() => {
-            if  (this.state.data && this.state.packs) {
+            if  (_has(this.state, 'packs')) {
               return makeArray(this.state.packs).map((item,idx) => {
                 if (item.keyboard == this.props.params.keyboard_ID) {
 
@@ -210,14 +211,15 @@ export default React.createClass({
         </div>
         <div className={styles.rightCol}>
 
-          {(() => {
-            return React.Children.map(this.props.children,
-             (child) => React.cloneElement(child, {
-               activeType: this.state.activeType,
-               packs: this.state.packs
-             })
-            );
-          })()}
+            {(() => {
+              return React.Children.map(this.props.children,
+               (child) => React.cloneElement(child, {
+                 activeType: this.state.activeType,
+                 packs: this.state.packs
+               })
+              );
+            })()}
+
 
         </div>
       </div>
