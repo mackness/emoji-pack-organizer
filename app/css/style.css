@@ -128,18 +128,18 @@ a.active {
 	left: 0;
 	top: 114px;
 	width: 100%;
-	max-width: 400px;
+	max-width: 320px;
 	padding: 25px 20px;
 	background-color: #fff;
 }
 
 .rightCol {
-    width: calc(100% - 400px);
-    float: left;
-    padding: 25px 20px;
-    overflow: hidden;
-    margin-left: 400px;
-    max-width: 1025px;
+	width: calc(100% - 320px);
+	float: left;
+	padding: 25px 20px;
+	overflow: hidden;
+	margin-left: 320px;
+	max-width: 1080px;
 }
 
 .rightCol > div {
@@ -148,17 +148,17 @@ a.active {
 
 .cell {
 	text-align: center;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin: 2px;
 	position: relative;
 	box-sizing: border-box;
-	flex: 0 0 11.11%;
-	-webkit-flex: 0 0 11.11%;
+	flex: 0 0 10.71%;
+	-webkit-flex: 0 0 10.71%;
 }
 
 .cellLoading {
 	width: 10%;
 	float: left;
+	margin: 2px;
 	text-align: center;
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -202,7 +202,6 @@ a.active {
 
 .emojiPhoto {
 	max-width: 100%;
-	max-width: 100px;
 	cursor: move;
 	padding: 7px;
 	border-radius: 3px;
@@ -267,12 +266,12 @@ a.active {
 }
 
 
-
-
-
-
-
-
+.inputRange {
+	width: 100%;
+	max-width: 150px;
+	float: right;
+	margin-top: 7px;
+}
 
 
 

@@ -1,7 +1,7 @@
 
 import React from 'react'
 import styles from '../css/style.css'
-// import { Sortable } from 'react-sortable';
+import { Sortable } from 'react-sortable';
 
 //components
 import Loader from './Loader'
@@ -54,10 +54,10 @@ export default React.createClass({
     let loadingElement = imgStatus ? null : <Loader />
     let cellClass = imgStatus ? styles.cell : styles.cellLoading
     let color = packColor ? packColor : null
-    
+
     if (color) {
       return (
-        <div className={cellClass}>
+        <div className={cellClass} style={{flex: `0 0 ${this.props.cellWidth}%`}} >
           {loadingElement}
           <img
             onLoad={this.handleImageLoaded}

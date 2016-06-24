@@ -3,6 +3,7 @@ import React from 'react'
 import styles from '../css/style.css'
 import Firebase from 'firebase'
 import ReactFireMixin from 'reactfire'
+import { Sortable } from 'react-sortable';
 
 //components
 import NavLink from './NavLink'
@@ -24,7 +25,7 @@ export default React.createClass({
   getInitialState() {
     return {
       data: {},
-      sortedEmojis: {}
+      // sortedEmojis: {}
     }
   },
 
@@ -41,11 +42,14 @@ export default React.createClass({
   				sorted.push({
   					id: cat,
   					title: categories[cat].title,
+  					keyboard: categories[cat].keyboard,
   					emojis: []
   				})
 	  			for (var emoji in categories[cat].emojis) {
-	  				sorted[x].emojis.push(emojis[emoji])
-	  				sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
+	  				emojis[emoji].id = emoji
+  					sorted[x].emojis.push(emojis[emoji])
+						sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
+	  				
 	  				y++
 	  			}
 	  			x++
@@ -54,7 +58,6 @@ export default React.createClass({
   			this.setState({
   				sortedEmojis: sorted
   			})
-
 			}
   	}
   },
@@ -112,48 +115,48 @@ export default React.createClass({
     return (
 	    <div>
 	      {(() => {
-	        if  (_has(this.state, 'emojis')) {
-	        	if (_has(this.state, 'categories')) {
-	        		if (_has(this.state, 'photos')) {
-	        			let x = getObjectKeys(this.state.categories)
-	        			debugger 
-		        		return getObjectKeys(this.state.categories).map((category, idx)=> {
-		        			if (category.obj.keyboard == this.props.params.keyboard_ID) {
 
-											return (
-												<div key={idx}>
-													<h3 className={styles.categoryTitle}>{category.obj.title}</h3>
-													<div className={styles.category}>
+	      	let {sortedEmojis} = this.state
 
-														{(() => {
-															if (category.obj.emojis) {
-																return getObjectKeys(category.obj.emojis).map((categoryEmoji, idx)=> {
-																	let {key} = categoryEmoji
-																	for (var photoKey in this.state.emojis[key].photo) {
-																		var photo = this.state.photos[photoKey]
-																	}
-																	if (this.props.activeType.key == this.state.emojis[key].type) {
-																		return (
-																			<Emoji
-																				key={idx}
-																				photo={photo}
-																				packs={this.props.packs}
-																				emoji_ID={key}
-																				emoji={this.state.emojis[key]} />
-																		)
-																	}
-																});
+	        if  (_has(this.state, 'photos')) {
+	        	if (_has(this.state, 'sortedEmojis')) {
+	        		return sortedEmojis.map((category, idx)=> {
+	        			if (category.keyboard == this.props.params.keyboard_ID) {
+									return (
+										<div key={idx}>
+											<h3 className={styles.categoryTitle}>{category.title}</h3>
+											<div className={styles.category}>
+
+												{(() => {
+													if (sortedEmojis[idx].emojis.length) {
+														return sortedEmojis[idx].emojis.map((emoji, idx)=> {
+															let {id} = emoji
+
+															for (let photoKey in this.state.emojis[id].photo) {
+																var photo = this.state.photos[photoKey]
 															}
-														})()}
 
-													</div>
-												</div>
-											)
-		        				
-		        				}
-		        		});
-	        		}
-	        	}
+															if (this.props.activeType.key == this.state.emojis[id].type) {
+																return (
+																	<Emoji
+																		key={idx}
+																		photo={photo}
+																		cellWidth={this.props.cellWidth}
+																		packs={this.props.packs}
+																		emoji_ID={id}
+																		emoji={this.state.emojis[id]} />
+																)
+															}
+														});
+													}
+												})()}
+
+											</div>
+										</div>
+									)	
+	        			}
+	        		});
+        		}
 	        } else {
 	          return <Loader />
 	        }

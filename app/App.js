@@ -4,20 +4,19 @@ import styles from './css/style.css'
 import Firebase from 'firebase'
 import ReactFireMixin from 'reactfire'
 import ReactEmoji from 'react-emoji'
-import _cloneDeep from 'lodash.cloneDeep'
 
 //components
 import NavLink from './components/NavLink'
 import Loader from './components/Loader'
 import Pack from './components/Pack'
+import InputRange from './components/InputRange'
 
 //methods
 import getObjectKeys from './methods/getObjectKeys'
 import makeArray from './methods/makeArray'
 import _has from 'lodash.has'
+import _cloneDeep from 'lodash.cloneDeep'
 
-
-// TODO: get category id and add it to url params
 
 export default React.createClass({
 
@@ -30,17 +29,22 @@ export default React.createClass({
     return {
       data: {},
       menu: true,
-      text: ':100:'
+      text: ':100:',
+      cellWidth: 10.71, 
+      range : {
+        min: 0,
+        max: 20
+      }
     }
   },
 
   getDefaultProps() {
     return {
-      text: ":(",
+      text: ":)",
       packColors: [
-        '#f1c40f', 
-        '#27ae60',
-        '#9b59b6',
+        '#34495e', 
+        '#e74c3c',
+        '#34495e',
         '#95a5a6',
         '#95a5a6',
         '#95a5a6'
@@ -139,7 +143,13 @@ export default React.createClass({
       }
     })
   },
-  
+
+  handleRangeValueChange(cellWidth, event) {
+    this.setState({
+      cellWidth
+    })
+  },
+
   // {this.props.params.keyboard_ID}
   // {this.props.children}
 
@@ -181,6 +191,10 @@ export default React.createClass({
               }
             })()}
             </ul>
+            <InputRange
+              range={this.state.values}
+              value={this.state.cellWidth}
+              onChange={this.handleRangeValueChange} />
           </nav>
         </div>
         <div className={styles.leftCol}>
@@ -215,7 +229,8 @@ export default React.createClass({
               return React.Children.map(this.props.children,
                (child) => React.cloneElement(child, {
                  activeType: this.state.activeType,
-                 packs: this.state.packs
+                 packs: this.state.packs,
+                 cellWidth: this.state.cellWidth
                })
               );
             })()}
