@@ -1,14 +1,13 @@
 
-import React from 'react'
+import React, {PropTypes} from 'react'
 import styles from '../css/style.css'
 import Firebase from 'firebase'
 import ReactFireMixin from 'reactfire'
-import { Sortable } from 'react-sortable';
 
 //components
 import NavLink from './NavLink'
 import Loader from './Loader'
-import Emoji from './Emoji'
+import DropSlot from './DropSlot'
 
 //methods
 import getObjectKeys from '../methods/getObjectKeys'
@@ -16,7 +15,6 @@ import makeArray from '../methods/makeArray'
 import _has from 'lodash.has'
 import _sortBy from 'lodash.sortBy'
 import _cloneDeep from 'lodash.cloneDeep'
-
 
 export default React.createClass({
 
@@ -49,7 +47,6 @@ export default React.createClass({
 	  				emojis[emoji].id = emoji
   					sorted[x].emojis.push(emojis[emoji])
 						sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
-	  				
 	  				y++
 	  			}
 	  			x++
@@ -138,13 +135,15 @@ export default React.createClass({
 
 															if (this.props.activeType.key == this.state.emojis[id].type) {
 																return (
-																	<Emoji
-																		key={idx}
-																		photo={photo}
-																		cellWidth={this.props.cellWidth}
-																		packs={this.props.packs}
-																		emoji_ID={id}
-																		emoji={this.state.emojis[id]} />
+                                  <DropSlot
+                                    key={idx}
+                                    photo={photo}
+                                    cellWidth={this.props.cellWidth}
+                                    packs={this.props.packs}
+                                    emoji_ID={id}
+                                    emoji={this.state.emojis[id]}>
+                                    {this.props.children}
+                                  </DropSlot>
 																)
 															}
 														});
@@ -164,7 +163,6 @@ export default React.createClass({
 	    </div>
     );
   }
-
 });
 
 

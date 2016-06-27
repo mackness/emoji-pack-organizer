@@ -156,7 +156,6 @@ a.active {
 }
 
 .cellLoading {
-	width: 10%;
 	float: left;
 	margin: 2px;
 	text-align: center;
@@ -201,7 +200,7 @@ a.active {
 }
 
 .emojiPhoto {
-	max-width: 100%;
+	max-width: 122px;
 	cursor: move;
 	padding: 7px;
 	border-radius: 3px;
@@ -273,5 +272,9 @@ a.active {
 	margin-top: 7px;
 }
 
+
+.dropTarget {
+
+}
 
 

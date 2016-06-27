@@ -1,36 +1,10 @@
-<<<<<<< HEAD
-
-import React from 'react';
-import styles from './App.css';
-import ReactFireMixin from 'reactfire';
-
-
-var App = React.createClass({
-
-  mixins: [ReactFireMixin],
-
-  getInitialState() {
-    return {
-      test: 'foo'
-    }
-  },
-
-  componentWillMount() {
-    var ref = new Firebase("https://development-d03f4.firebaseio.com/categories");
-    this.bindAsArray(ref, 'categories');
-  },
-
-  componentWillUnmount() {
-    this.firebaseRef.off();
-  },
-
-=======
-
 import React from 'react'
 import styles from './css/style.css'
 import Firebase from 'firebase'
 import ReactFireMixin from 'reactfire'
 import ReactEmoji from 'react-emoji'
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContext } from 'react-dnd';
 
 //components
 import NavLink from './components/NavLink'
@@ -44,8 +18,7 @@ import makeArray from './methods/makeArray'
 import _has from 'lodash.has'
 import _cloneDeep from 'lodash.cloneDeep'
 
-
-export default React.createClass({
+let App = React.createClass({
 
   mixins: [
     ReactFireMixin,
@@ -180,15 +153,10 @@ export default React.createClass({
   // {this.props.params.keyboard_ID}
   // {this.props.children}
 
->>>>>>> e527ce9bc07996c683d2d324c912cdad63065b47
   render() {
     let expanded = this.state.menu ? 'open' : 'closed'
     let keyboardTitle = this.state.data && this.state.keyboard ? this.state.keyboard.title : '[keyboard]'
     return (
-<<<<<<< HEAD
-      <div className={styles.app}>
-        {JSON.stringify(this.state)}
-=======
       <div className={expanded}>
         <div className={styles.headerBlock}>
           <header className={styles.header}>
@@ -267,17 +235,12 @@ export default React.createClass({
               );
             })()}
 
-
         </div>
->>>>>>> e527ce9bc07996c683d2d324c912cdad63065b47
       </div>
     )
   }
-<<<<<<< HEAD
 });
 
-export default App;
-=======
-})
+export default DragDropContext(HTML5Backend)(App);
 
->>>>>>> e527ce9bc07996c683d2d324c912cdad63065b47
+

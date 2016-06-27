@@ -1,7 +1,9 @@
 
-import React from 'react'
+import React, {PropTypes} from 'react'
 import styles from '../css/style.css'
 import { Sortable } from 'react-sortable';
+import {DragSource} from 'react-dnd' 
+import {ItemTypes} from '../constants/constants'
 
 //components
 import Loader from './Loader'
@@ -11,8 +13,37 @@ import BrokenImage from './BrokenImage'
 import getObjectKeys from '../methods/getObjectKeys'
 import makeArray from '../methods/makeArray'
 
+var EmojiSource = {
+  canDrag(props) {
+    return true
+  },
+  beginDrag(props) {
+    return {
+      text: props.text
+    };
+  },
+  endDrag(props, monitor, dragComponent) {
+    if (monitor.didDrop()) {
+      let {oldPos, dropComponent, newPos, child} = monitor.getDropResult();
+      debugger
+    }
+  }
+}
 
-export default React.createClass({
+var collect = (connect, monitor) => {
+  return {
+    connectDragSource: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  };
+}
+
+let Emoji = React.createClass({
+
+  PropTypes: {
+    text: PropTypes.string.isRequired,
+    isDragging: PropTypes.bool.isRequired,
+    connectDragSource: PropTypes.func.isRequired
+  },
 
   getInitialState() {
     return {
@@ -46,18 +77,20 @@ export default React.createClass({
   },
 
   render() {
-    let {imgStatus, packColor} = this.state
-    let {thumbnail, url} = this.props.photo
-    let {position, isIOS, isAndroid} = this.props.emoji
-
-    let photo = thumbnail ? `http://d3q6cnmfgq77qf.cloudfront.net/${thumbnail}` : url
-    let loadingElement = imgStatus ? null : <Loader />
-    let cellClass = imgStatus ? styles.cell : styles.cellLoading
-    let color = packColor ? packColor : null
+    let {imgStatus, packColor} = this.state,
+        {thumbnail, url} = this.props.photo,
+        {position, isIOS, isAndroid} = this.props.emoji,
+        photo = thumbnail ? `http://d3q6cnmfgq77qf.cloudfront.net/${thumbnail}` : url,
+        loadingElement = imgStatus ? null : <Loader />,
+        cellClass = imgStatus ? styles.cell : styles.cellLoading,
+        color = packColor ? packColor : null,
+        connectDragSource = this.props.connectDragSource;
+        
+        console.log('isDragging', this.props.isDragging)
 
     if (color) {
-      return (
-        <div className={cellClass} style={{flex: `0 0 ${this.props.cellWidth}%`}} >
+      return connectDragSource(
+        <div className={cellClass}>
           {loadingElement}
           <img
             onLoad={this.handleImageLoaded}
@@ -76,6 +109,8 @@ export default React.createClass({
 
 });
 
+
+export default DragSource(ItemTypes.EMOJI, EmojiSource, collect)(Emoji);
 
 
 
