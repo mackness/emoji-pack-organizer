@@ -1,16 +1,35 @@
+
 import React from 'react';
 import styles from './App.css';
+import ReactFireMixin from 'reactfire';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {test: 'foo'};
-  }
+
+var App = React.createClass({
+
+  mixins: [ReactFireMixin],
+
+  getInitialState() {
+    return {
+      test: 'foo'
+    }
+  },
+
+  componentWillMount() {
+    var ref = new Firebase("https://development-d03f4.firebaseio.com/categories");
+    this.bindAsArray(ref, 'categories');
+  },
+
+  componentWillUnmount() {
+    this.firebaseRef.off();
+  },
+
   render() {
     return (
       <div className={styles.app}>
-        bar
+        {JSON.stringify(this.state)}
       </div>
     );
   }
-}
+});
+
+export default App;

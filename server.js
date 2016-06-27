@@ -7,6 +7,7 @@ const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config.js');
 const request = require('request');
+var firebase = require("firebase");
 
 const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 3000 : process.env.PORT;
@@ -51,7 +52,9 @@ app.use('*', function(req, res) {
      r = request(url);
   }
 
-  req.pipe(r).pipe(res);
+  req.pipe(r).on('error', function(err) {
+    console.log("that's an error: ", err);
+  }).pipe(res);
 });
 
 app.listen(port, '0.0.0.0', function onStart(err) {

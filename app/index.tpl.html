@@ -6,6 +6,16 @@
     <title>react-kickstart</title>
     <meta name="description" content="just another react + webpack boilerplate">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/reactfire/0.6.0/reactfire.min.js"></script>
+    <script>
+      var config = {
+        apiKey: "AIzaSyBS-CvHtCnTjYQ89dLF_TpzYxIDch3z39s",
+        databaseURL: "https://development-d03f4.firebaseio.com",
+        authDomain: "development-d03f4.firebaseapp.com"
+      };
+      firebase.initializeApp(config);
+    </script>
   </head>
   <body>
     <div id="root"></div>
