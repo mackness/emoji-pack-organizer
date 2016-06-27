@@ -30,17 +30,20 @@ if (isDeveloping) {
 
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
-  app.get('/ra', function response(req, res) {
+  app.get('/ra*', function response(req, res) {
     res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'dist-react/index.html')));
     res.end();
   });
 } else {
   //production
   app.use(express.static(__dirname + '/dist-react'));
-  app.get('/ra', function response(req, res) {
+  app.get('/ra*', function response(req, res) {
     res.sendFile(path.join(__dirname, 'dist-react/index.html'));
   });
 }
+//serializer route
+const serializer = require('./router/serializer');
+app.use('/serializer', serializer);
 
 //route other request to ember app
 app.use('*', function(req, res) {
