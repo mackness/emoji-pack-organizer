@@ -81,6 +81,7 @@ let Emoji = React.createClass({
           onError={this.handleImageError}
           className={styles.emojiPhoto}
           data-position={position}
+          data-newpos={this.props.newPos}
           data-id={this.props.emoji_ID}
           src={photo} />
       </div>

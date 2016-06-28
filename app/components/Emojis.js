@@ -109,11 +109,27 @@ export default React.createClass({
     }
   },
 
+  extractPhoto(emoji) {
+    let {id} = emoji
+    for (let photoKey in this.state.emojis[id].photo) {
+      var photo = this.state.photos[photoKey]
+    }
+    return photo
+  },
+
+  filterByActiveType(emoji) {
+    let {id} = emoji
+    if (this.props.activeType.key == this.state.emojis[id].type) {
+      return true
+    } else {
+      return false
+    }
+  },
+
   render() {
     return (
 	    <div>
 	      {(() => {
-
 	      	let {sortedEmojis} = this.state
 
 	        if  (_has(this.state, 'photos')) {
@@ -124,30 +140,20 @@ export default React.createClass({
 										<div key={idx}>
 											<h3 className={styles.categoryTitle}>{category.title}</h3>
 											<div className={styles.category}>
-
 												{(() => {
 													if (sortedEmojis[idx].emojis.length) {
-														return sortedEmojis[idx].emojis.map((emoji, idx)=> {
-
-															let {id} = emoji
-															for (let photoKey in this.state.emojis[id].photo) {
-																var photo = this.state.photos[photoKey]
-															}
-
-															if (this.props.activeType.key == this.state.emojis[id].type) {
-																return (
-                                  <DropSlot
-                                    key={idx}
-                                    photo={photo}
-                                    cellWidth={this.props.cellWidth}
-                                    packs={this.props.packs}
-                                    emoji_ID={id}
-                                    emoji={this.state.emojis[id]}>
-                                    {this.props.children}
-                                  </DropSlot>
-																)
-															}
-														});
+														return sortedEmojis[idx].emojis.filter(this.filterByActiveType).map((emoji, idx)=> {
+                              return (
+                                <DropSlot
+                                  key={idx}
+                                  newPosition={idx}
+                                  photo={this.extractPhoto(emoji)}
+                                  packs={this.props.packs}
+                                  emoji_ID={emoji.id}
+                                  emoji={this.state.emojis[emoji.id]}>
+                                  {this.props.children}</DropSlot>
+                              )
+                            })
 													}
 												})()}
 
