@@ -7,7 +7,7 @@ import {ItemTypes} from '../constants/constants'
 //components
 import Emoji from './Emoji'
 
-const spec = {
+const slotTarget = {
   canDrop(props) {
     console.log('[canDrop]', props)
     return true;
@@ -34,19 +34,54 @@ let collect = (connect, monitor) => {
 }
 
 let DropSlot = React.createClass({
+
+  getInitialState() {
+    return {
+      packColor: null,
+      newPos: 0, 
+    }
+  },
+
+  componentWillMount() {
+    let {packs, emoji_ID} = this.props
+    for (var pack in packs) {
+      let {emojis} = packs[pack]
+      if (emojis) {
+        if (emojis.hasOwnProperty(emoji_ID)) {
+          this.setState({
+            packColor: packs[pack].color
+          })
+        }
+      }
+    }
+  },
+
   render() {
-    const { connectDropTarget, isOver } = this.props
-    return connectDropTarget(
-      <div className={styles.dropTarget} style={{flex: `0 0 ${this.props.cellWidth}%`}}>
-        <Emoji 
-          photo={this.props.photo}
-          cellWidth={this.props.cellWidth}
-          packs={this.props.packs}
-          emoji_ID={this.props.emoji_ID}
-          emoji={this.props.emoji} />
-      </div>
-    )
+    const { connectDropTarget, isOver } = this.props,
+          { packColor } = this.state;
+
+    let color = packColor ? packColor : null;
+    if (color) {
+      return connectDropTarget(
+        <div 
+          className={styles.dropTarget}
+          style={{
+            flex: `0 0 ${this.props.cellWidth}%`,
+            borderColor: color
+          }}>
+          <Emoji 
+            photo={this.props.photo}
+            cellWidth={this.props.cellWidth}
+            emoji_ID={this.props.emoji_ID}
+            emoji={this.props.emoji} 
+            newPos={this.state.newPos}
+            cellWidth={this.props.cellWidth} />
+        </div>
+      )
+    } else {
+      return false
+    }
   }
 });
 
-export default DropTarget(ItemTypes.EMOJI, spec, collect)(DropSlot);
+export default DropTarget(ItemTypes.EMOJI, slotTarget, collect)(DropSlot);

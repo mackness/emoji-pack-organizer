@@ -150,19 +150,16 @@ a.active {
 	text-align: center;
 	margin: 2px;
 	position: relative;
-	box-sizing: border-box;
-	flex: 0 0 10.71%;
-	-webkit-flex: 0 0 10.71%;
+	overflow: hidden;
 }
 
 .cellLoading {
 	float: left;
-	margin: 2px;
 	text-align: center;
-	margin-top: 5px;
-	margin-bottom: 5px;
 	position: relative;
 	min-height: 100px;
+	width: 100%;
+	overflow: hidden;
 }
 
 .cellLoading:before {
@@ -178,8 +175,8 @@ a.active {
 
 .cell .loader,
 .cellLoading .loader {
-    left: 35%;
-    top: 35%;
+    left: 34%;
+    top: 36%;
     background: #fff;
     transform: translate3d(-50%,-50%,0);
 }
@@ -200,11 +197,10 @@ a.active {
 }
 
 .emojiPhoto {
-	max-width: 122px;
 	cursor: move;
 	padding: 7px;
-	border-radius: 3px;
-	border: solid 4px transparent;
+	max-width: 100%;
+	display: block;
 }
 
 .packListItem {
@@ -274,7 +270,14 @@ a.active {
 
 
 .dropTarget {
-
+	border-radius: 3px;
+	margin: 2px;
+	max-width: 108.16px;
+	max-height: 108.16px;
+	border: solid 4px transparent;
+	box-sizing: border-box;
+	flex: 0 0 10.71%;
+	-webkit-flex: 0 0 10.71%;
 }
 
 

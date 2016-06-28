@@ -44,7 +44,8 @@ export default React.createClass({
   					emojis: []
   				})
 	  			for (var emoji in categories[cat].emojis) {
-	  				emojis[emoji].id = emoji
+	  				emojis[emoji]['id'] = emoji
+            emojis[emoji]['newPosition'] = null
   					sorted[x].emojis.push(emojis[emoji])
 						sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
 	  				y++
@@ -127,8 +128,8 @@ export default React.createClass({
 												{(() => {
 													if (sortedEmojis[idx].emojis.length) {
 														return sortedEmojis[idx].emojis.map((emoji, idx)=> {
-															let {id} = emoji
 
+															let {id} = emoji
 															for (let photoKey in this.state.emojis[id].photo) {
 																var photo = this.state.photos[photoKey]
 															}
