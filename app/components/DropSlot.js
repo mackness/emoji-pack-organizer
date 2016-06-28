@@ -74,7 +74,7 @@ let DropSlot = React.createClass({
             cellWidth={this.props.cellWidth}
             emoji_ID={this.props.emoji_ID}
             emoji={this.props.emoji} 
-            newPos={this.state.newPos}
+            newPosition={this.props.newPosition}
             cellWidth={this.props.cellWidth} />
         </div>
       )

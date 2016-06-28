@@ -23,7 +23,7 @@ export default React.createClass({
   getInitialState() {
     return {
       data: {},
-      // sortedEmojis: {}
+      // emojisInCategories: {}
     }
   },
 
@@ -47,14 +47,14 @@ export default React.createClass({
 	  				emojis[emoji]['id'] = emoji
             emojis[emoji]['newPosition'] = null
   					sorted[x].emojis.push(emojis[emoji])
-						sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
+						// sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
 	  				y++
 	  			}
 	  			x++
   			}
-
-  			this.setState({
-  				sortedEmojis: sorted
+  			
+        this.setState({
+  				emojisInCategories: sorted
   			})
 			}
   	}
@@ -110,16 +110,22 @@ export default React.createClass({
   },
 
   extractPhoto(emoji) {
-    let {id} = emoji
-    for (let photoKey in this.state.emojis[id].photo) {
+    for (let photoKey in this.state.emojis[emoji.id].photo) {
       var photo = this.state.photos[photoKey]
     }
     return photo
   },
 
-  filterByActiveType(emoji) {
-    let {id} = emoji
-    if (this.props.activeType.key == this.state.emojis[id].type) {
+  filterEmojisByActiveType(emoji) {
+    if (this.props.activeType.key == this.state.emojis[emoji.id].type) {
+      return true
+    } else {
+      return false
+    }
+  },
+
+  filterCategoriesByActiveKeyboard(category) {
+    if (category.keyboard == this.props.params.keyboard_ID) {
       return true
     } else {
       return false
@@ -130,37 +136,33 @@ export default React.createClass({
     return (
 	    <div>
 	      {(() => {
-	      	let {sortedEmojis} = this.state
-
+	      	let {emojisInCategories} = this.state
 	        if  (_has(this.state, 'photos')) {
-	        	if (_has(this.state, 'sortedEmojis')) {
-	        		return sortedEmojis.map((category, idx)=> {
-	        			if (category.keyboard == this.props.params.keyboard_ID) {
-									return (
-										<div key={idx}>
-											<h3 className={styles.categoryTitle}>{category.title}</h3>
-											<div className={styles.category}>
-												{(() => {
-													if (sortedEmojis[idx].emojis.length) {
-														return sortedEmojis[idx].emojis.filter(this.filterByActiveType).map((emoji, idx)=> {
-                              return (
-                                <DropSlot
-                                  key={idx}
-                                  newPosition={idx}
-                                  photo={this.extractPhoto(emoji)}
-                                  packs={this.props.packs}
-                                  emoji_ID={emoji.id}
-                                  emoji={this.state.emojis[emoji.id]}>
-                                  {this.props.children}</DropSlot>
-                              )
-                            })
-													}
-												})()}
-
-											</div>
+	        	if (_has(this.state, 'emojisInCategories')) {
+	        		return emojisInCategories.filter(this.filterCategoriesByActiveKeyboard).map((category, idx)=> {
+								return (
+									<div key={idx}>
+										<h3 className={styles.categoryTitle}>{category.title}</h3>
+										<div className={styles.category}>
+											{(() => {
+												if (emojisInCategories[idx].emojis.length) {
+													return emojisInCategories[idx].emojis.filter(this.filterEmojisByActiveType).map((emoji, val)=> {
+                            return (
+                              <DropSlot
+                                key={val}
+                                newPosition={val}
+                                photo={this.extractPhoto(emoji)}
+                                packs={this.props.packs}
+                                emoji_ID={emoji.id}
+                                emoji={this.state.emojis[emoji.id]}>
+                                {this.props.children}</DropSlot>
+                            )
+                          })
+												}
+											})()}
 										</div>
-									)	
-	        			}
+									</div>
+								)	
 	        		});
         		}
 	        } else {

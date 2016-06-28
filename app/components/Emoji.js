@@ -73,6 +73,7 @@ let Emoji = React.createClass({
         cellClass = imgStatus ? styles.cell : styles.cellLoading,
         connectDragSource = this.props.connectDragSource;
 
+    console.log(this.props.newPosition)
     return connectDragSource(
       <div className={cellClass}>
         {loadingElement}
@@ -81,7 +82,7 @@ let Emoji = React.createClass({
           onError={this.handleImageError}
           className={styles.emojiPhoto}
           data-position={position}
-          data-newpos={this.props.newPos}
+          data-newposition={this.props.newPosition}
           data-id={this.props.emoji_ID}
           src={photo} />
       </div>
