@@ -5,6 +5,7 @@ class KeyboardSerializer {
   constructor(fireref, keyboardId, emojiConfig) {
     this.fireref = fireref;
     this.keyboardId = keyboardId;
+    this.keyboardName = "";
     this.cacheObj = {};
     this.emojiConfig = (typeof emojiConfig !== "undefined") ? emojiConfig : {};
     this.rootLevel = {
@@ -58,9 +59,11 @@ class KeyboardSerializer {
     keyboardRef.once("value", function(keyboard) {
       //got keyboard
       ks.cacheObj["keyboards"] = keyboard.val();
+      ks.keyboardName = ks.cacheObj["keyboards"]["title"];
       /*
         grab data from FB for all root level objects defined in rootLevel
       */      
+      
       var categories = Object.keys(ks.cacheObj["keyboards"]["categories"]);
       ks.rootLevel["emojis"]["filter"]["value"] = categories;
 

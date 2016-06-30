@@ -10,16 +10,18 @@
 			"url": "http://d3q6cnmfgq77qf.cloudfront.net/",
 		},
 		"s3": {
-			"url": "https://wri-emoji-production.s3.amazonaws.com/"
-		}
+			"url": "https://wri-emoji-production.s3.amazonaws.com/",
+			"bucket": "wri-emoji-production",
+			"region": "us-east-1"
+		},
 	},
 	"emoji-keyboards": {
 		"ios-manifest-v2": {
-			"endpoint": "keyboards/v2/[:keyboard]/main-manifest-ios.json",
+			"endpoint": "keyboards/:keyboard/:target/v2/main-manifest-ios-1.json",
 			"class": "classes/serializer/iosv2"
 		},
 		"ios-assets-v2": {
-			"endpoint": "keyboards/v2/[:keyboard]/assets_ios.json",
+			"endpoint": "keyboards/:keyboard/:target/v2/assets_ios-1.json",
 			"class": "classes/serializer/iosassetsv2"
 		},
 		/*

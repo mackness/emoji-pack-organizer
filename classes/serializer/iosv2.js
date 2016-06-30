@@ -19,8 +19,10 @@ var IOSV2 = {
           fields: function(obj) { return obj['url'] }
         }
       },
+      position: "fill"
     }],
     types: [{
+      id: "fill",
       type: "fill",
       title: "fill",
       photo: {
@@ -30,6 +32,12 @@ var IOSV2 = {
           fields: function(obj) { return obj['url'] }
         }
       },
+      position: "fill",
+      isIOS: "fill",
+      isAndroid: "fill",
+      display: function() {
+        return {size: {width: "50", height: "50"}}
+      }
     }],
     asset_json_url: function() { return "http://d3q6cnmfgq77qf.cloudfront.net/keyboards/kimoji/testing/v2/assets_ios.json" },
     packs: [{
