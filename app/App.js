@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './css/style.css'
 import Firebase from 'firebase'
+import {FirebaseConfig} from './constants/constants'
 import ReactFireMixin from 'reactfire'
 import ReactEmoji from 'react-emoji'
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -11,6 +12,7 @@ import NavLink from './components/NavLink'
 import Loader from './components/Loader'
 import Pack from './components/Pack'
 import InputRange from './components/InputRange'
+import notification from './components/Notification'
 
 //methods
 import getObjectKeys from './methods/getObjectKeys'
@@ -31,6 +33,7 @@ let App = React.createClass({
       menu: true,
       text: ':100:',
       cellWidth: 10.71, 
+      notification: false,
       range : {
         min: 0,
         max: 20
@@ -53,7 +56,7 @@ let App = React.createClass({
   },
 
   logout() {
-    var ref = new Firebase('https://emoji-dev.firebaseio.com/');
+    var ref = new Firebase(FirebaseConfig.FIREBASE_URL);
     ref.unauth()
   },
 
@@ -123,7 +126,7 @@ let App = React.createClass({
   },
 
   componentWillMount() {
-    var rootRef = new Firebase('https://emoji-dev.firebaseio.com/');
+    var rootRef = new Firebase(FirebaseConfig.FIREBASE_URL);
     if (rootRef.getAuth()) {
       rootRef.onAuth(this.monitorUserState)
       this.getPackData(rootRef)
@@ -150,6 +153,18 @@ let App = React.createClass({
     })
   },
 
+  hanldeNotification(action) {
+    if (action == 'show') {
+      this.setState({
+        notification: true
+      })
+    } else {
+      this.setState({
+        notification: false
+      })
+    }
+  },
+
   // {this.props.params.keyboard_ID}
   // {this.props.children}
 
@@ -164,7 +179,7 @@ let App = React.createClass({
             <button onClick={this.logout} className={styles.logout}>Logout</button>
           </header>
           <nav className={styles.nav}>
-            <ul role="nav" className={styles.navList}>
+            <ul role="nav" className={styles.navList} key={this.props.packColors}>
             {(() => {
               if (_has(this.state, 'keyboard')) {
                 if (_has(this.state, 'types')) {
@@ -207,10 +222,13 @@ let App = React.createClass({
                 if (item.keyboard == this.props.params.keyboard_ID) {
 
                   return (
-                    <Pack 
-                      key={idx}
-                      color={item.color}
-                      title={item.title} /> 
+                    <div>
+                      <Pack 
+                        key={idx}
+                        color={item.color}
+                        title={item.title} /> 
+                      <notification />
+                    </div>
                   )
 
                 }
@@ -230,7 +248,8 @@ let App = React.createClass({
                (child) => React.cloneElement(child, {
                  activeType: this.state.activeType,
                  packs: this.state.packs,
-                 cellWidth: this.state.cellWidth
+                 cellWidth: this.state.cellWidth,
+                 hanldeNotification: this.hanldeNotification
                })
               );
             })()}

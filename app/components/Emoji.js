@@ -12,6 +12,7 @@ import BrokenImage from './BrokenImage'
 //methods
 import getObjectKeys from '../methods/getObjectKeys'
 import makeArray from '../methods/makeArray'
+import _sortBy from 'lodash.sortBy'
 
 var EmojiSource = {
 
@@ -20,18 +21,51 @@ var EmojiSource = {
   },
   
   beginDrag(props) {
+    console.log('dragging')
     return {
-      text: props.text
+      text: props
     };
   },
-  
+
   endDrag(props, monitor, dragComponent) {
     if (monitor.didDrop()) {
-      let {oldPos, dropComponent, newPos, child} = monitor.getDropResult();
-      debugger
+
+      let sourceEmoji = dragComponent.props.emoji
+      let targetEmoji = monitor.getDropResult().props.emoji
+      let updated = []
+
+      const updatedCategorizedEmojis = props.categorizedEmojis.map((category, x)=> {
+        updated.push(category)
+        return category.emojis.map((emoji, y)=> {
+          if (emoji.id == sourceEmoji.id) {
+            if (targetEmoji['newPosition'] < emoji['newPosition'])
+              emoji['newPosition'] = (targetEmoji['newPosition'] - 0.5)
+            else
+              emoji['newPosition'] = (targetEmoji['newPosition'] + 0.5)
+            updated[x].emojis[y] = emoji
+            return emoji
+          } else {
+            updated[x].emojis[y] = emoji
+            return emoji
+          }
+        }).sort((a,b)=> {
+          if (a['newPosition'] > b['newPosition']) {
+            return 1
+          }
+          if (a['newPosition'] < b['newPosition']) {
+            return -1
+          }
+        }).map((emoji, idx)=> {
+          emoji['newPosition'] = idx
+          updated[x].emojis[idx] = emoji
+          return emoji
+        })
+      })
+
+      props.updateSortedEmojis(updated)
+      
     }
   }
-
 }
 
 var collect = (connect, monitor) => {
@@ -64,6 +98,10 @@ let Emoji = React.createClass({
     this.setState({imgStatus: 'failed'})
   },
 
+  componentWillMount() {
+    // this.props.emoji['newPosition'] = this.props.newPosition
+  },
+
   render() {
     let {imgStatus} = this.state,
         {thumbnail, url} = this.props.photo,
@@ -73,17 +111,16 @@ let Emoji = React.createClass({
         cellClass = imgStatus ? styles.cell : styles.cellLoading,
         connectDragSource = this.props.connectDragSource;
 
-    console.log(this.props.newPosition)
     return connectDragSource(
       <div className={cellClass}>
         {loadingElement}
         <img
+          emoji={this.props.emoji}
           onLoad={this.handleImageLoaded}
           onError={this.handleImageError}
           className={styles.emojiPhoto}
-          data-position={position}
-          data-newposition={this.props.newPosition}
           data-id={this.props.emoji_ID}
+          data-newposition={this.props.newPosition}
           src={photo} />
       </div>
     );

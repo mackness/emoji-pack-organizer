@@ -9,19 +9,18 @@ import Emoji from './Emoji'
 
 const slotTarget = {
   canDrop(props) {
-    console.log('[canDrop]', props)
+    // console.log('[canDrop]', props)
     return true;
   },
+  
   hover(props, monitor, component) {
-    console.log('[hover]', props, monitor, component)
+    // console.log('[hover]', props, monitor, component)
   },
+  
   drop(props, monitor, dropComponent) {
-    console.log('[drop]', dropComponent, props, monitor)
     return {
-      oldPos: props, 
-      dropComponent, 
-      newPos: props,
-      child: monitor
+      component: dropComponent, 
+      props: props
     }
   }
 }
@@ -60,28 +59,30 @@ let DropSlot = React.createClass({
     const { connectDropTarget, isOver } = this.props,
           { packColor } = this.state;
 
-    let color = packColor ? packColor : null;
-    if (color) {
       return connectDropTarget(
         <div 
           className={styles.dropTarget}
           style={{
             flex: `0 0 ${this.props.cellWidth}%`,
-            borderColor: color
+            borderColor: packColor
           }}>
           <Emoji 
             photo={this.props.photo}
-            cellWidth={this.props.cellWidth}
             emoji_ID={this.props.emoji_ID}
+            category_ID={this.props.category_ID}
             emoji={this.props.emoji} 
             newPosition={this.props.newPosition}
-            cellWidth={this.props.cellWidth} />
+            cellWidth={this.props.cellWidth} 
+            updateSortedEmojis={this.props.updateSortedEmojis}
+            categorizedEmojis={this.props.categorizedEmojis} />
         </div>
       )
-    } else {
-      return false
-    }
-  }
+    } 
 });
 
 export default DropTarget(ItemTypes.EMOJI, slotTarget, collect)(DropSlot);
+
+
+
+
+

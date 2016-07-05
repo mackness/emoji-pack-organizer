@@ -185,7 +185,7 @@ a.active {
 	overflow: hidden;
 	width: 100%;
 	margin-top: 10px;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 	padding: 15px;
 	background-color: #fff;
 	display: flex;
@@ -193,7 +193,8 @@ a.active {
 }
 
 .categoryTitle {
-	margin: 0 0 15px 0;
+	float: left;
+	margin: 7px 0 0 0;
 }
 
 .emojiPhoto {
@@ -279,5 +280,36 @@ a.active {
 	flex: 0 0 10.71%;
 	-webkit-flex: 0 0 10.71%;
 }
+
+.save {	
+	color: #fff;
+	float: right;
+	display: inline-block;
+	padding: 5px 12px 5px 12px;
+	border-radius: 2px;
+	margin-bottom: 12px;
+	text-decoration: none;
+	background-color: #0b5e90;
+	transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	transition-delay: 0.2s;
+	transition: 100ms all ease-in-out;
+	border: solid 1px #0b5e90;
+}
+
+.save .loader {
+	width: 2em;
+	height: 2em;
+	position: relative;
+}
+
+.save:hover {
+	background-color: #2780b6;
+	border: solid 1px #2780b6;
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+}
+
+
+
+
 
 

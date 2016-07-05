@@ -2,12 +2,14 @@
 import React, {PropTypes} from 'react'
 import styles from '../css/style.css'
 import Firebase from 'firebase'
+import {FirebaseConfig} from '../constants/constants'
 import ReactFireMixin from 'reactfire'
 
 //components
 import NavLink from './NavLink'
 import Loader from './Loader'
 import DropSlot from './DropSlot'
+import SaveButton from './SaveButton'
 
 //methods
 import getObjectKeys from '../methods/getObjectKeys'
@@ -23,10 +25,13 @@ export default React.createClass({
   getInitialState() {
     return {
       data: {},
-      // emojisInCategories: {}
+      isSaving: false
     }
   },
 
+  //this takes the category object and emoji object 
+  //from the state and creates an 'emojis' property on the category
+  //object and pushes all the emojis that belong to it to an array
   handleSortingEmojis(props) {
   	if (_has(this.state, 'categories')) {
   		if (_has(this.state, 'emojis')) {
@@ -45,19 +50,57 @@ export default React.createClass({
   				})
 	  			for (var emoji in categories[cat].emojis) {
 	  				emojis[emoji]['id'] = emoji
-            emojis[emoji]['newPosition'] = null
-  					sorted[x].emojis.push(emojis[emoji])
-						// sorted[x].emojis = _sortBy(sorted[x].emojis, 'position')
+            if (_has(emojis[emoji], 'newPosition')) {
+              sorted[x].emojis = _sortBy(sorted[x].emojis, 'newPosition')
+            } else {
+              emojis[emoji]['newPosition'] = y
+            }
+            sorted[x].emojis.push(emojis[emoji])
 	  				y++
 	  			}
+          y = 0
 	  			x++
   			}
-  			
+
         this.setState({
-  				emojisInCategories: sorted
+  				categorizedEmojis: sorted
   			})
 			}
   	}
+  },
+
+  //this takes the sorted emoji array and updates the original emoji object
+  //in the state that came from firebase with a new position property
+  //the new position property is set in Emoji.js in the endDrag method
+  updateSortedEmojis(sortedEmojis) {
+    let {emojis} = this.state
+    sortedEmojis.forEach((category, idx)=> {
+      category.emojis.forEach((emoji, idx)=> {
+        emojis[emoji.id]['newPosition'] = emoji['newPosition']
+      })
+    })
+
+    this.setState({
+      categorizedEmojis: sortedEmojis
+    })
+  },
+
+  handleSave(event) {
+    event.preventDefault()
+    let {emojis} = this.state
+    this.setState({saving: true})
+    this.state.rootRef.child('emojis').set(emojis, (error)=> {
+      if (error) {
+        console.log('that\'s en error:', error)
+        this.setState({
+          saving: 'failed'
+        })
+      } else {
+        console.log('emojis saved successfully')
+        this.setState({saving: false})
+        this.props.handleNotificaiton('show')
+      }
+    })
   },
 
   componentWillReceiveProps(props) {
@@ -65,7 +108,6 @@ export default React.createClass({
   },
 
   getEmojis(ref) {
-    // ref.child('emojis').orderByChild('type').equalTo('-KGsouQg0HP9r8ny1Z-K').on('value', (snapshot)=> {
     ref.child('emojis').on('value', (snapshot)=> {
       this.setState({
         emojis: snapshot.val()
@@ -78,7 +120,6 @@ export default React.createClass({
 
   getCategories(ref) {
     ref.child('categories').orderByChild('keyboard').equalTo(this.props.params.keyboard_ID).on('value', (snapshot)=> {
-    // ref.child('categories').on('value', (snapshot)=> {
       this.setState({
         categories: snapshot.val()
       })
@@ -99,11 +140,14 @@ export default React.createClass({
   },
 
   componentWillMount() {
-    var rootRef = new Firebase('https://emoji-dev.firebaseio.com/')
+    var rootRef = new Firebase(FirebaseConfig.FIREBASE_URL)
     if (rootRef.getAuth()) {
       this.getEmojis(rootRef)
       this.getCategories(rootRef)
       this.getPhotos(rootRef)
+      this.setState({
+        rootRef
+      })
     } else {
       this.redirectToLogin();
     }
@@ -118,7 +162,16 @@ export default React.createClass({
 
   filterEmojisByActiveType(emoji) {
     if (this.props.activeType.key == this.state.emojis[emoji.id].type) {
-      return true
+    let {packs, emoji_ID} = this.props
+    let {id} = emoji
+    for (var pack in packs) {
+      let {emojis} = packs[pack]
+      if (emojis) {
+        if (emojis.hasOwnProperty(id)) {
+          return true
+        }
+      }
+    }
     } else {
       return false
     }
@@ -136,17 +189,22 @@ export default React.createClass({
     return (
 	    <div>
 	      {(() => {
-	      	let {emojisInCategories} = this.state
+	      	let {categorizedEmojis} = this.state
 	        if  (_has(this.state, 'photos')) {
-	        	if (_has(this.state, 'emojisInCategories')) {
-	        		return emojisInCategories.filter(this.filterCategoriesByActiveKeyboard).map((category, idx)=> {
+	        	if (_has(this.state, 'categorizedEmojis')) {
+	        		return categorizedEmojis.filter(this.filterCategoriesByActiveKeyboard).map((category, idx)=> {
 								return (
 									<div key={idx}>
 										<h3 className={styles.categoryTitle}>{category.title}</h3>
+                    <SaveButton 
+                      handleSave={this.handleSave}
+                      isSaving={this.state.saving}
+                    />
 										<div className={styles.category}>
 											{(() => {
-												if (emojisInCategories[idx].emojis.length) {
-													return emojisInCategories[idx].emojis.filter(this.filterEmojisByActiveType).map((emoji, val)=> {
+												if (categorizedEmojis[idx].emojis.length) {
+													return categorizedEmojis[idx].emojis.filter(this.filterEmojisByActiveType).map((emoji, val)=> {
+
                             return (
                               <DropSlot
                                 key={val}
@@ -154,9 +212,14 @@ export default React.createClass({
                                 photo={this.extractPhoto(emoji)}
                                 packs={this.props.packs}
                                 emoji_ID={emoji.id}
-                                emoji={this.state.emojis[emoji.id]}>
+                                category_ID={category.id}
+                                cellWidth={this.props.cellWidth}
+                                emoji={this.state.emojis[emoji.id]}
+                                updateSortedEmojis={this.updateSortedEmojis}
+                                categorizedEmojis={this.state.categorizedEmojis}>
                                 {this.props.children}</DropSlot>
                             )
+                          
                           })
 												}
 											})()}
