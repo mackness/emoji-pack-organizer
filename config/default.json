@@ -17,11 +17,11 @@
 	},
 	"emoji-keyboards": {
 		"ios-manifest-v2": {
-			"endpoint": "keyboards/:keyboard/:target/v2/main-manifest-ios-1.json",
+			"endpoint": "keyboards/:keyboard/:target/v2/main-manifest-ios.json",
 			"class": "classes/serializer/iosv2"
 		},
 		"ios-assets-v2": {
-			"endpoint": "keyboards/:keyboard/:target/v2/assets_ios-1.json",
+			"endpoint": "keyboards/:keyboard/:target/v2/assets_ios.json",
 			"class": "classes/serializer/iosassetsv2"
 		},
 		/*

@@ -10,6 +10,12 @@ var IOSV2 = {
       }
     },
     categories: [{
+      _exclude_filter: function(thisObj) {
+        if (thisObj['title'] == 'Recents') {
+          return true;
+        }
+        return false;
+      },
       id: "fill",
       title: "fill",
       photo: {
@@ -22,6 +28,12 @@ var IOSV2 = {
       position: "fill"
     }],
     types: [{
+      _exclude_filter: function(thisObj) {
+        if (thisObj['title'] == 'Recents' || thisObj['title'] == 'Purchases') {
+          return true;
+        }
+        return false;
+      },
       id: "fill",
       type: "fill",
       title: "fill",
@@ -35,12 +47,24 @@ var IOSV2 = {
       position: "fill",
       isIOS: "fill",
       isAndroid: "fill",
-      display: function() {
-        return {size: {width: "50", height: "50"}}
+      display: function(val, fillConf, thisObj) {
+        if (thisObj['title'] == 'Emoji') {
+          return {size: {width: 50, height: 50}, "rows": 3};
+        } else if (thisObj['title'] == 'Sticker') {
+          return {size: {width: 100, height: 100}, "rows": 2};
+        } else {
+          return {size: {width: 0, height: 0}, "rows": 3};
+        }
       }
     }],
     asset_json_url: function() { return "http://d3q6cnmfgq77qf.cloudfront.net/keyboards/kimoji/testing/v2/assets_ios.json" },
     packs: [{
+      _exclude_filter: function(thisObj) {
+        if (thisObj['published']) {
+          return false;
+        } 
+        return true;
+      },
       id: "fill",
       payloadId: {
         _aliasAs: "payload_id",

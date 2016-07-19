@@ -63,7 +63,7 @@ class KeyboardSerializer {
       /*
         grab data from FB for all root level objects defined in rootLevel
       */      
-      
+
       var categories = Object.keys(ks.cacheObj["keyboards"]["categories"]);
       ks.rootLevel["emojis"]["filter"]["value"] = categories;
 
@@ -163,12 +163,21 @@ class KeyboardSerializer {
   fillValues(fillInstrs, rootObj) {
     var filledObj = {};
     /* loop thru fillInstrs and fill values for fields */
+    //check to see if there's an exclude filter, if there is check to make sure it's true before continuing
+    if (typeof fillInstrs['_exclude_filter'] !== "undefined") {
+        var exclude_filter = fillInstrs['_exclude_filter'];
+        if (exclude_filter(rootObj)) {
+          return;
+        }
+    }
+
     for (var field in fillInstrs) {
       //console.log(field);
       if (field == '_expand') continue;
       if (field == '_value') continue;
       if (field == '_aliasAs') continue;
       if (field == '_filter') continue;
+      if (field == '_exclude_filter') continue;
 
       var fieldInstr = fillInstrs[field];
       //console.log(fieldInstr);
@@ -195,7 +204,7 @@ class KeyboardSerializer {
             //check to see if field contains ids, it does lets filter by ids
             var filter =  tmpFillInstrs['_filter'];
             if (typeof filter !== "undefined") {
-              var tmpIds = this.completeFill('fill', rootObj[objKey]);
+              var tmpIds = this.completeFill('fill', rootObj[objKey], objsToFillFrom);
               if (typeof tmpIds !== "undefined") {
                 var filterIdKeys = Object.keys(tmpIds);
                 var that = this;
@@ -203,9 +212,15 @@ class KeyboardSerializer {
                   var objToFill = that.getObjectByKey(keyId, objsToFillFrom);
                   //if fill instruction is object call fillValues
                   if (typeof tmpFillInstrs === "object") {
-                    expandedObjs.push(that.fillValues(tmpFillInstrs, objToFill));
+                    var backObj = that.fillValues(tmpFillInstrs, objToFill)
+                    if (backObj != null) {
+                      expandedObjs.push(backObj);
+                    }
                   } else {
-                    expandedObjs.push(that.completeFill(tmpFillInstrs, objToFill));
+                    var backObj = that.completeFill(tmpFillInstrs, objToFill, objsToFillFrom)
+                    if (backObj != null) {
+                      expandedObjs.push(backObj);
+                    }
                   }
                 });
               }
@@ -216,7 +231,10 @@ class KeyboardSerializer {
               }
               for (var toFillId in objsToFillFrom) {
                 var objToFill = this.getObjectByKey(toFillId, objsToFillFrom);
-                expandedObjs.push(this.fillValues(tmpFillInstrs, objToFill));
+                var backObj = this.fillValues(tmpFillInstrs, objToFill);
+                if (backObj != null) {
+                  expandedObjs.push(backObj);
+                }
               }
             }
             
@@ -249,9 +267,9 @@ class KeyboardSerializer {
             //try to see if this field contain ids, but check to see if filter is defined.  If so use that instead of field name
             var filter = fieldInstr['_filter'];
             if (typeof filter !== "undefined") {
-              var tmpIds = this.completeFill('fill', rootObj[filter]);
+              var tmpIds = this.completeFill('fill', rootObj[filter], rootObj);
             } else {
-              var tmpIds = this.completeFill('fill', rootObj[field]);
+              var tmpIds = this.completeFill('fill', rootObj[field], rootObj);
             }
 
             if (typeof tmpIds !== "undefined") {
@@ -265,7 +283,7 @@ class KeyboardSerializer {
                 if (typeof expandObjFillInstr === "object") {
                   expandedObjs.push(that.fillValues(expandObjFillInstr, objToFill));
                 } else {
-                  expandedObjs.push(that.completeFill(expandObjFillInstr, objToFill));
+                  expandedObjs.push(that.completeFill(expandObjFillInstr, objToFill, rootObj));
                 }
               });
               if (expandedObjs.length == 1) {
@@ -281,7 +299,7 @@ class KeyboardSerializer {
           } else {
             //console.log("159");
             //console.log(fieldInstr);
-            var val = this.completeFill(fieldInstr, rootObj[field]);
+            var val = this.completeFill(fieldInstr, rootObj[field], rootObj);
             if (typeof aliasAs !== "undefined") {
               filledObj[aliasAs] = val;
             } else {
@@ -291,19 +309,19 @@ class KeyboardSerializer {
         }
       } else {
         //striaght fill
-        filledObj[field] = this.completeFill(fieldInstr, rootObj[field])
+        filledObj[field] = this.completeFill(fieldInstr, rootObj[field], rootObj)
       }
     }
     return filledObj;
   }
 
-  completeFill(fillInstr, val) {
+  completeFill(fillInstr, val, thisObj) {
     
     if (typeof fillInstr === "function") {
       /*
       The fill instruction has a callback
       */
-      val = fillInstr(val, this.emojiConfig);
+      val = fillInstr(val, this.emojiConfig, thisObj);
     } 
     return val;
 
