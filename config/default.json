@@ -4,5 +4,30 @@
 		"apiKey": "",
 		"authDomain": "",
 		"databaseURL": "https://emoji-dev.firebaseio.com/"
+	},
+	"emoji": {
+		"cloudfront": {
+			"url": "http://d3q6cnmfgq77qf.cloudfront.net/",
+		},
+		"s3": {
+			"url": "https://wri-emoji-production.s3.amazonaws.com/",
+			"bucket": "wri-emoji-production",
+			"region": "us-east-1"
+		},
+	},
+	"emoji-keyboards": {
+		"ios-manifest-v2": {
+			"endpoint": "keyboards/:keyboard/:target/v2/main-manifest-ios.json",
+			"class": "classes/serializer/iosv2"
+		},
+		"ios-assets-v2": {
+			"endpoint": "keyboards/:keyboard/:target/v2/assets_ios.json",
+			"class": "classes/serializer/iosassetsv2"
+		},
+		/*
+		"android-manifest-v2": {
+			"endpoint": "keyboards/v2/[:keyboard]/main-manifest-android.json",
+			"class": "classes/serializer/androidv2"
+		}*/
 	}
 }

@@ -26,6 +26,7 @@
     "jscs": "jscs ."
   },
   "dependencies": {
+    "aws-sdk": "^2.4.2",
     "babel-cli": "^6.4.0",
     "config": "^1.21.0",
     "firebase": "^2.4.2",
